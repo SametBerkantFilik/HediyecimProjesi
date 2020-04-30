@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/flatly/bootstrap.min.css">
+    <link rel="stylesheet" href="/libraries/lobibox/lobibox.min.css">
+    <link rel="stylesheet" href="/libraries/imageviewer/imageviewer.css">
+    <link rel="stylesheet" href="/stylesheets/style.css">
+</head>
+
+<body class="override">
+    <nav role="navigation" class="navbar navbar-inverse">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" data-toggle="collapse" data-target="#navbar" aria-expanded="false" class="navbar-toggle collapsed"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button>
+                <a href="/products" class="navbar-brand"> <img src="/images/logo.png" width="22" class="d-ib ml-r">Hediyecim</a>
+            </div>
+            <div id="navbar" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/products">Ürünler</a>
+                        <% if ( user ){ %>
+                            <li class="dropdown">
+                                <a href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle">Kontrol Paneli <span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="/user/account">Hesap</a></li>
+                                    <li><a href="/user/products">Ürünlerim</a></li>
+                                    <li><a href="/user/products/add">Ürün Ekle</a></li>
+                                </ul>
+                            </li>
+                            <% } %>
+
+                                <% if ( user ){ %>
+                                    <li><a href="/user/logout">Çıkış Yap</a></li>
+                                    <% } else { %>
+                                        <li><a href="/user/register">Kayıt Ol</a></li>
+                                        <li><a href="/user/login">Giriş Yap</a></li>
+                                        <% } %>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>

@@ -1,0 +1,42 @@
+<%- include("../partials/header") -%>
+
+    <div class="container products-view-all">
+        <form class="post-list">
+            <input type="hidden" value="" />
+        </form>
+        <div class="clearfix">
+            <article class="navbar-form navbar-left p-0 m-0 ml-b">
+                <div class="form-group">
+                    <label>Sayfa Başına: </label>
+                    <select class="form-control post_max m-b">
+					<option value="4">4</option>
+					<option value="8">8</option>
+					<option value="16">16</option>
+				</select>
+                </div>
+                <label>Anahtar Kelime Ara: 
+			<input type="text" placeholder="Anahtar Kelime Ara" class="form-control post_search_text m-b"/>
+			</label>
+                <div class="form-group">
+                    <label>Tarafından Sipariş: </label>
+                    <select class="form-control post_name m-b">
+					<option value="name">Başlık</option>
+					<option value="price">Fiyat</option>
+					<option value="stock">Stok</option>
+				</select>
+                    <select class="form-control post_sort m-b">
+					<option value="ASC">Azalan Fiyat</option>
+					<option value="DESC">Artan Fiyat</option>
+				</select>
+                </div>
+                <input type="submit" value="Filtrele" class="btn btn-primary post_search_submit m-b" />
+            </article>
+        </div>
+        <hr/>
+        <div class="clearfix">
+            <div class="pagination-container clearfix"></div>
+            <div class="pagination-nav"></div>
+        </div>
+    </div>
+
+    <%- include("../partials/footer") -%>

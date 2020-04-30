@@ -1,0 +1,55 @@
+<%- include("../partials/header") -%>
+
+    <div class="container wave-box-wrapper">
+        <div class="wave-box"></div>
+        <form action="/user/register/create" method="post" class="create-account">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Kayıt Ol</div>
+                    <div class="panel-body">
+                        <div class="form-group clearfix">
+                            <label class="col-md-4 control-label text-right">E-posta<span class="text-red">*:</span></label>
+                            <div class="col-md-6">
+                                <input type="text" name="email" value="" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="col-md-4 control-label text-right">Şifre<span class="text-red">*:</span></label>
+                            <div class="col-md-6">
+                                <input type="password" name="password" value="" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="col-md-4 control-label text-right">Şifreyi Onayla:</label>
+                            <div class="col-md-6">
+                                <input type="password" name="password2" value="" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="col-md-4 control-label text-right">Adı:</label>
+                            <div class="col-md-6">
+                                <input type="first_name" name="first_name" value="" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="col-md-4 control-label text-right">Soyadı:</label>
+                            <div class="col-md-6">
+                                <input type="last_name" name="last_name" value="" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="col-md-4 control-label text-right">Telefon Numarası:</label>
+                            <div class="col-md-6">
+                                <input type="phone_number" name="phone_number" value="" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-md-offset-4">
+                            <input type="submit" value="Kayıt Ol" class="btn btn-success" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <%- include("../partials/footer") -%>
