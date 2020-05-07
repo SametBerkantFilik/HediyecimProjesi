@@ -1,0 +1,67 @@
+<%- include("../partials/header") -%>
+
+    <div class="container wave-box-wrapper">
+        <div class="wave-box"></div>
+        <form action="/user/account/update" method="post" class="update-account">
+            <div class="col-md-10 col-md-offset-1">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Hesabım</div>
+                    <div class="panel-body">
+                        <div class="form-group clearfix">
+                            <label class="col-md-4 control-label text-right">E-posta<span class="text-red">:</span></label>
+                            <div class="col-md-6">
+                                <input type="text" name="email" value="<%= user.email %>" disabled="" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="col-md-4 control-label text-right">Eski Şifre:</label>
+                            <div class="col-md-6">
+                                <input type="password" name="old_password" value="" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="col-md-4 control-label text-right">Yeni Şifre:</label>
+                            <div class="col-md-6">
+                                <input type="password" name="password" value="" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="col-md-4 control-label text-right">Yeni Şifreyi Onayla:</label>
+                            <div class="col-md-6">
+                                <input type="password" name="password_confirm" value="" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="col-md-4 control-label text-right">Adı:</label>
+                            <div class="col-md-6">
+                                <input type="first_name" name="first_name" value="<%= user.first_name %>" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="col-md-4 control-label text-right">Soyadı:</label>
+                            <div class="col-md-6">
+                                <input type="last_name" name="last_name" value="<%= user.last_name %>" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="col-md-4 control-label text-right">Telefon Numarası:</label>
+                            <div class="col-md-6">
+                                <input type="phone_number" name="phone_number" value="<%= user.phone_number %>" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="col-md-4 control-label text-right">Hakkımda:</label>
+                            <div class="col-md-6">
+                                <textarea id="ck-editor-area" name="about_me" class="form-control"><%= user.about_me %></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-md-offset-4">
+                            <input type="submit" value="Güncelle" class="btn btn-success" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <%- include("../partials/footer") -%>

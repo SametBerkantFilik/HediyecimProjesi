@@ -1,0 +1,46 @@
+<%- include("../partials/header") -%>
+
+    <div class="container products-view item-<%= item._id %>">
+        <div class="col-md-8">
+            <div class="panel panel-default">
+                <div class="panel-heading item-name"> </div>
+                <div class="panel-body">
+                    <input type="hidden" value="<%= item_images %>" class="item-images-json" />
+                    <div class="imageviewer">
+                        <div class="image-container"></div>
+                        <span class="glyphicon glyphicon-chevron-left prev"></span><span class="glyphicon glyphicon-chevron-right next"></span>
+                        <div class="footer-info"><span class="current"></span>/<span class="total"></span></div>
+                    </div>
+                    <hr/>
+                    <h3>Ürün Açıklaması</h3>
+                    <div class="item-content">
+                        <%- item.content %>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">Ürün Detayları</div>
+                <div class="panel-body">
+                    <h2 class="text-danger m-0 ml-b">₺<span class="item-price"><%= parseFloat(item.price).toFixed(2) %></span><small>&nbsp; </small></h2>
+                    <div class="clearfix">
+                        <div class="col-md-6"><span class="sr-only">Beş Yıldızdan Dördü</span><span aria-hidden="true" class="glyphicon glyphicon-star"></span><span aria-hidden="true" class="glyphicon glyphicon-star"></span><span aria-hidden="true" class="glyphicon glyphicon-star"></span>
+                            <span aria-hidden="true" class="glyphicon glyphicon-star"></span><span aria-hidden="true" class="glyphicon glyphicon-star-empty"></span><span class="label label-success">7</span></div>
+                        <div class="col-md-6"><a href="#_" class="monospaced"><span class="glyphicon glyphicon-pencil"></span> Bir Değerlendirme Yazın</a></div>
+                    </div>
+                    <hr/>
+                    <p><strong>Yayınlanma Tarihi</strong>:<span class="item-date"> <%= item.date %></span></p>
+                    <p><strong>Stok</strong>:<span class="item-stock"> <%= item.stock %></span></p>
+                    <hr/>
+                    <a href="/add/{{ this.id }}" class="btn btn-success btn-block"><span class="glyphicon glyphicon-shopping-cart"></span> Sepete ekle</a><a href="#_" class="btn btn-primary btn-block"><span class="glyphicon glyphicon-star"></span> İstek Listesine Ekle</a>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">Yorumlar</div>
+                <div class="panel-body"></div>
+            </div>
+        </div>
+    </div>
+
+    <%- include("../partials/footer") -%>

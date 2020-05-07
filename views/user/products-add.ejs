@@ -1,0 +1,56 @@
+<%- include("../partials/header") -%>
+
+    <div class="container">
+        <p class="ml-b"><a href="/user/products" class="ml-b text-success"><span class="glyphicon glyphicon-chevron-left"></span> Tüm Ürünler</a>
+            <div class="panel panel-default">
+                <div class="panel-heading">Ürün Ekle</div>
+                <div class="panel-body">
+                    <form method="post" action="/user/products/create" class="create-product">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label>İsim*</label>
+                                <input type="text" name="name" value="" class="form-control required" />
+                            </div>
+                            <div class="form-group">
+                                <label>Açıklama</label>
+                                <textarea id="ck-editor-area" name="content" class="form-control"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Kısa Açıklama</label>
+                                <textarea name="excerpt" rows="7" class="form-control"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Fiyat*</label>
+                                <div class="input-group">
+                                    <div class="input-group-addon">₺</div>
+                                    <input type="text" name="price" value="" placeholder="Miktar" class="form-control required" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Durum</label>
+                                <select name="status" class="form-control">
+							<option value="1">Aktif</option>
+							<option value="0">Pasif</option>
+						</select>
+                            </div>
+                            <div class="form-group">
+                                <label>Tarih</label>
+                                <div class="input-group date datepicker">
+                                    <input type="text" name="date" value="" class="form-control" /><span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Stok*</label>
+                                <input type="number" name="stock" value="" class="form-control required" />
+                            </div>
+                            <input type="submit" value="Submit" class="btn btn-success" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </p>
+    </div>
+
+    <%- include("../partials/footer") -%>

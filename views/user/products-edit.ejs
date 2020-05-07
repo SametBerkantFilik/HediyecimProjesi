@@ -1,0 +1,89 @@
+<%- include("../partials/header") -%>
+
+    <div id="item-<%= item._id %>" class="container item-edit">
+        <p class="ml-b">
+            <a href="/user/products" class="ml-b text-success">
+                <span class="glyphicon glyphicon-chevron-left"></span> Tüm Ürünler</a>
+            <div class="panel panel-default">
+                <div class="panel-heading">Ürün Ekle</div>
+                <div class="panel-body">
+                    <form method="post" action="/user/products/update" enctype="multipart/form-data" class="update-product">
+                        <input type="hidden" name="id" value="<%= item._id %>" />
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label>İsim*</label>
+                                <input type="text" name="name" value="<%= item.name %>" class="form-control required" />
+                            </div>
+                            <div class="form-group">
+                                <label>Açıklama</label>
+                                <textarea id="ck-editor-area" name="content" class="form-control"><%- item.content %></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Kısa Açıklama</label>
+                                <textarea name="excerpt" rows="7" class="form-control"><%= item.excerpt %></textarea>
+                            </div>
+                            <div class="form-group ml-t">
+                                <label>Resim Yükle</label>
+                                <input type="file" name="images" accept="image/*" multiple="" class="form-control image-input" />
+                                <hr />
+                                <div class="clearfix m-t images-section">
+                                    <% if (item.images){ %>
+                                        <% var image_count = 1; %>
+                                            <% item.images.forEach(function(image) { %>
+                                                <div class="col-sm-3">
+                                                    <span id="unset-<%= image %>" title="Delete image" class="unset-image glyphicon glyphicon-remove text-danger lead m-0 c-p"></span>
+                                                    <% if (item.featured_image == image){ %>
+                                                        <span title="Set as featured image" id="featured-<%= image %>" style="color: #E4C317" class="set-featured-image glyphicon glyphicon-star lead m-0 c-p"></span>
+                                                        <% } else { %>
+                                                            <span title="Set as featured image" id="featured-<%= image %>" class="set-featured-image glyphicon glyphicon-star-empty lead m-0 c-p"></span>
+                                                            <% } %>
+
+                                                                <img src="/images/uploads/<%= image %>" class="img-thumbnail img-responsive" />
+
+                                                                <% if( image_count % 4 == 0 ){ %>
+                                                                    <div class="clearfix"></div>
+                                                                    <% } %>
+                                                                        <% image_count++; %>
+                                                </div>
+                                                <% }); %>
+                                                    <% } else { %>
+                                                        <p class="alert alert-danger no-item-images">Hiç Resim Bulunamadı</p>
+                                                        <% } %>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Fiyat*</label>
+                                <div class="input-group">
+                                    <div class="input-group-addon">₺</div>
+                                    <input type="text" name="price" value="<%= item.price %>" placeholder="Amount" class="form-control required" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Durum</label>
+                                <select name="status" class="form-control">
+                                <% var select=null; if (item.status == 0) select="selected"; %>
+                                <option value="1">Aktif</option>
+                                <option value="0" <%= select %>>Pasif</option>
+                            </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Tarih</label>
+                                <div class="input-group date datepicker">
+                                    <input type="text" name="date" value="<%= item.date %>" class="form-control" /><span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Stok*</label>
+                                <input type="number" name="stock" value="<%= item.stock %>" class="form-control required" />
+                            </div>
+                            <input type="submit" value="Güncelle" class="btn btn-success" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </p>
+    </div>
+
+    <%- include("../partials/footer") -%>
