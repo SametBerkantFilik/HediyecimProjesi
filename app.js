@@ -20,7 +20,7 @@ var routes = require('./routes/index');
 
 var app = express();
 
-/* Setup socket.io and express to run on same port (3100) */
+/* Socket.io ve express'i aynı bağlantı noktasında çalışacak şekilde ayarlayın (3100) */
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 
@@ -33,15 +33,15 @@ io.sockets.on('connection', function(socket) {
     });
 });
 
-/* Define some globals that will be made accessible all through out the application */
+/* Tüm uygulama boyunca erişilebilir hale getirilecek bazı globalleri tanımlayın */
 global.root_dir = path.resolve(__dirname);
 global.uploads_dir = root_dir + '/public/images/uploads/';
 
-/* view engine setup */
+/* view engine kurulumu */
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-/* Make the response uncompressed */
+/* Yanıtı sıkıştırılmamış hale getirme */
 app.locals.pretty = true;
 
 /* uncomment after placing your favicon in /public */
@@ -61,12 +61,12 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 passport.use(new LocalStrategy({
-        /* Define custom fields for passport */
+        /* Pasaport için özel alanlar tanımlama */
         usernameField: 'email',
         passwordField: 'password'
     },
     function(email, password, done) {
-        /* validate email and password */
+        /* e-postayı ve şifreyi doğrula */
         users.findOne({ email: email }, function(err, user) {
             if (err) { return done(err); }
             if (!user) {
@@ -75,45 +75,45 @@ passport.use(new LocalStrategy({
             if (user.password != md5(password)) {
                 return done(null, false, { message: 'Incorrect password.' });
             }
-            /* if everything is correct, let's pass our user object to the passport.serializeUser */
+            /* Her şey doğruysa, kullanıcı neslimizi passport.serializeUser öğesine geçirelim. */
             return done(null, user);
         });
     }
 ));
 
 passport.serializeUser(function(user, done) {
-    /* Attach to the session as req.session.passport.user = { email: 'test@test.com' } */
-    /* The email key will be later used in our passport.deserializeUser function */
+    /* Oturuma req.session.passport.user = {email: 'test@test.com'} olarak ekleyin. */
+    /* E-posta anahtarı daha sonra passport.deserializeUser işlevimizde kullanılacaktır. */
     done(null, user.email);
 });
 
 passport.deserializeUser(function(email, done) {
     users.findOne({ email: email }, function(err, user) {
-        /* The fetched "user" object will be attached to the request object as req.user */
+        /* Getirilen "kullanıcı" nesnesi istek nesnesine req.user olarak eklenir. */
         done(err, user);
     });
 });
 
 
 app.use(function(req, res, next) {
-    req.db = db; /* Make our db accessible to our router */
-    res.locals.user = req.user; /* Make our user object accessible in all our templates. */
+    req.db = db; /* Db'yi yönlendiricimize erişilebilir hale getirin. */
+    res.locals.user = req.user; /* Kullanıcı nesnemize tüm şablonlarımızdan erişilebilir olmasını sağlayın. */
     next();
 });
 
 app.use('/', routes);
 
-/* catch 404 and forward to error handler */
+/* 404'ü yakala ve hata gidericiye ilet */
 app.use(function(req, res, next) {
     var err = new Error('Not Found');
     err.status = 404;
     next(err);
 });
 
-/* error handlers */
+/* error işleyicileri */
 
-/* development error handler */
-/* will print stacktrace */
+/* geliştirme hatası işleyici */
+/* stacktrace yazdıracak */
 if (app.get('env') === 'development') {
     app.use(function(err, req, res, next) {
         res.status(err.status || 500);
@@ -124,8 +124,8 @@ if (app.get('env') === 'development') {
     });
 }
 
-/* production error handler */
-/* no stacktraces leaked to user */
+/* üretim hatası giderici */
+/* kullanıcıya yığın takibi yapılmadı */
 app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {

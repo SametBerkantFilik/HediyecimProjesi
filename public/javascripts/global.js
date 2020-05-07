@@ -1,64 +1,64 @@
 /**
- * Helper function to get append the loading image to message container when submitting via AJAX
+ * AJAX ile gönderirken yükleme görüntüsünü mesaj kabına eklemek için yardımcı işlev
  * 
  * @param textarea, height
  */
-function load_ckeditor( textarea, height ) {			
-	CKEDITOR.config.allowedContent = true;
-	CKEDITOR.replace( textarea, {
-		toolbar: null,
-		toolbarGroups: null,	
-		height: height
-	});
+function load_ckeditor(textarea, height) {
+    CKEDITOR.config.allowedContent = true;
+    CKEDITOR.replace(textarea, {
+        toolbar: null,
+        toolbarGroups: null,
+        height: height
+    });
 }
-		
+
 /**
- * Helper function to command CKEditor to update the instancnes before performing the AJAX call.
- * This will populate the hidden textfields with the proper values coming from the CKEditor 
+ * AJAX çağrısı yapmadan önce örneklerin güncellenmesi için CKEditor komutunu veren yardımcı işlevi.
+ * Bu işlem gizli metin alanlarını CKEditor'dan gelen uygun değerlerle dolduracaktır
  *
  */
 function update_ckeditor_instances() {
-	for ( instance in CKEDITOR.instances ) {
-		CKEDITOR.instances[instance].updateElement();
-	}
+    for (instance in CKEDITOR.instances) {
+        CKEDITOR.instances[instance].updateElement();
+    }
 }
 
 /**
- * Provides a nice wave animation effect 
+ * Güzel bir dalga animasyon efekti sağlar
  * 
  */
-function wave_box_animate(){
-	if( $('.wave-box-effect').length ){
-		jQuery( ".wave-box-effect" ).css( "left", "0px" );
-		jQuery( ".wave-box-effect" ).animate( { 'left':"99%" }, 1000, wave_box_animate );
-	}
+function wave_box_animate() {
+    if ($('.wave-box-effect').length) {
+        jQuery(".wave-box-effect").css("left", "0px");
+        jQuery(".wave-box-effect").animate({ 'left': "99%" }, 1000, wave_box_animate);
+    }
 }
 
 function wave_box(option) {
-	if($('.wave-box-wrapper').length){
-		if(option == 'on'){
-			if($(".wave-box-wrapper .wave-box").html('<div class="wave-box-effect"></div>').show()){
-				wave_box_animate();
-			}
-		} else if(option == 'off')  {
-			$(".wave-box-wrapper .wave-box").html('').fadeOut();
-		}
-	}
+    if ($('.wave-box-wrapper').length) {
+        if (option == 'on') {
+            if ($(".wave-box-wrapper .wave-box").html('<div class="wave-box-effect"></div>').show()) {
+                wave_box_animate();
+            }
+        } else if (option == 'off') {
+            $(".wave-box-wrapper .wave-box").html('').fadeOut();
+        }
+    }
 }
 
-/* Used for getting the parameter of a URL */
+/* Bir URL'nin parametresini almak için kullanılır */
 function get_url_value(variable) {
-   var query = window.location.search.substring(1);
-   var vars = query.split("&");
-   for (var i=0;i<vars.length;i++) {
-		   var pair = vars[i].split("=");
-		   if(pair[0] == variable){return pair[1];}
-   }
-   return(false);
+    var query = window.location.search.substring(1);
+    var vars = query.split("&");
+    for (var i = 0; i < vars.length; i++) {
+        var pair = vars[i].split("=");
+        if (pair[0] == variable) { return pair[1]; }
+    }
+    return (false);
 }
 
-/* Can be used for retrieving form data in object format */
-$.fn.serializeObject = function(){
+/* Nesne biçimindeki form verilerini almak için kullanılabilir */
+$.fn.serializeObject = function() {
     var o = {};
     var a = this.serializeArray();
     $.each(a, function() {

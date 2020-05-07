@@ -25,11 +25,11 @@ router.post('/view-front', function(req, res) {
     pag_content = '';
     pag_navigation = '';
 
-    page = parseInt(req.body.data.page); /* Page we are currently at */
-    name = req.body.data.name; /* Name of the column name we want to sort */
-    sort = req.body.data.sort == 'ASC' ? 1 : -1; /* Order of our sort (DESC or ASC) */
-    max = parseInt(req.body.data.max); /* Number of items to display per page */
-    search = req.body.data.search; /* Keyword provided on our search box */
+    page = parseInt(req.body.data.page); /* Şu anda bulunduğumuz sayfa */
+    name = req.body.data.name; /* Sıralamak istediğimiz sütun adının adı */
+    sort = req.body.data.sort == 'ASC' ? 1 : -1; /* Sıralamamızın sırası (DESC veya ASC) */
+    max = parseInt(req.body.data.max); /* Sayfa başına görüntülenecek öğe sayısı */
+    search = req.body.data.search; /* Arama kutumuzda verilen anahtar kelime */
 
     cur_page = page;
     page -= 1;
@@ -42,9 +42,9 @@ router.post('/view-front', function(req, res) {
 
     where_search = {};
 
-    /* Check if there is a string inputted on the search box */
+    /* Arama kutusuna girilmiş bir dize olup olmadığını kontrol edin */
     if (search != '') {
-        /* If a string is inputted, include an additional query logic to our main query to filter the results */
+        /* Bir dize girilirse, sonuçları filtrelemek için ana sorgumuza ek bir sorgu mantığı ekleyin */
         var filter = new RegExp(search, 'i');
         where_search = {
             '$or': [
@@ -58,13 +58,13 @@ router.post('/view-front', function(req, res) {
     var count = '';
     var sort_query = {};
 
-    /* We use async task to make sure we only return data when all queries completed successfully */
+    /* async i yalnızca tüm sorgular başarıyla tamamlandığında veri döndürdüğümüzden emin olmak için kullanırız */
     async.parallel([
         function(callback) {
-            /* Use name and sort variables as field names */
+            /* Alan adları olarak ad kullanın ve değişkenleri sıralayın */
             sort_query[name] = sort;
 
-            /* Retrieve all the posts */
+            /* Tüm mesajları al */
             products.find(where_search, {
                 limit: per_page,
                 skip: start,
@@ -86,8 +86,8 @@ router.post('/view-front', function(req, res) {
                 callback();
             });
         }
-    ], function(err) { //This is the final callback
-        /* Check if our query returns anything. */
+    ], function(err) { //Burası son callback
+        /* Sorgumuzun bir şey döndürüp döndürmediğini kontrol edin. */
         if (count) {
             for (var key in all_items) {
                 pag_content += '<div class="col-sm-3 item-' + all_items[key]._id + '">' +
@@ -100,18 +100,18 @@ router.post('/view-front', function(req, res) {
                     '<div class="list-group m-0">' +
                     '<div class="list-group-item b-0 b-t">' +
                     '<i class="fa fa-calendar-o fa-2x pull-left ml-r"></i>' +
-                    '<p class="list-group-item-text">Price</p>' +
-                    '<h4 class="list-group-item-heading">$<span class="item-price">' + parseFloat(all_items[key].price).toFixed(2) + '</span></h4>' +
+                    '<p class="list-group-item-text">Fiyat</p>' +
+                    '<h4 class="list-group-item-heading">₺<span class="item-price">' + parseFloat(all_items[key].price).toFixed(2) + '</span></h4>' +
                     '</div>' +
                     '<div class="list-group-item b-0 b-t">' +
                     '<i class="fa fa-calendar fa-2x pull-left ml-r"></i>' +
-                    '<p class="list-group-item-text">On Stock</p>' +
+                    '<p class="list-group-item-text">Stok Durumu</p>' +
                     '<h4 class="list-group-item-heading item-stock">' + all_items[key].stock + '</h4>' +
                     '</div>' +
                     '</div>' +
                     '</div>' +
                     '<div class="panel-footer">' +
-                    '</p><a href="products/' + all_items[key]._id + '" class="btn btn-success btn-block">View Item</a></p>' +
+                    '</p><a href="products/' + all_items[key]._id + '" class="btn btn-success btn-block">Ürünü İncele</a></p>' +
                     '</div>' +
                     '</div>' +
                     '</div>';
@@ -143,16 +143,16 @@ router.post('/view-front', function(req, res) {
         pag_navigation += "<ul>";
 
         if (first_btn && cur_page > 1) {
-            pag_navigation += "<li p='1' class='active'>First</li>";
+            pag_navigation += "<li p='1' class='active'>İlk</li>";
         } else if (first_btn) {
-            pag_navigation += "<li p='1' class='inactive'>First</li>";
+            pag_navigation += "<li p='1' class='active'>İlk</li>";
         }
 
         if (previous_btn && cur_page > 1) {
             pre = cur_page - 1;
-            pag_navigation += "<li p='" + pre + "' class='active'>Previous</li>";
+            pag_navigation += "<li p='" + pre + "' class='active'>Geri</li>";
         } else if (previous_btn) {
-            pag_navigation += "<li class='inactive'>Previous</li>";
+            pag_navigation += "<li class='active'>Geri</li>";
         }
         for (i = start_loop; i <= end_loop; i++) {
 
@@ -164,15 +164,15 @@ router.post('/view-front', function(req, res) {
 
         if (next_btn && cur_page < no_of_paginations) {
             nex = cur_page + 1;
-            pag_navigation += "<li p='" + nex + "' class='active'>Next</li>";
+            pag_navigation += "<li p='" + nex + "' class='active'>İleri</li>";
         } else if (next_btn) {
-            pag_navigation += "<li class='inactive'>Next</li>";
+            pag_navigation += "<li class='active'>İleri</li>";
         }
 
         if (last_btn && cur_page < no_of_paginations) {
-            pag_navigation += "<li p='" + no_of_paginations + "' class='active'>Last</li>";
+            pag_navigation += "<li p='" + no_of_paginations + "' class='active'>Son</li>";
         } else if (last_btn) {
-            pag_navigation += "<li p='" + no_of_paginations + "' class='inactive'>Last</li>";
+            pag_navigation += "<li p='" + no_of_paginations + "' class='active'>Son</li>";
         }
 
         pag_navigation = pag_navigation + "</ul>";
@@ -188,7 +188,7 @@ router.post('/view-front', function(req, res) {
 
 });
 
-/* GET Single Product Data. */
+/* Tek Ürün Verilerini getirir. */
 router.get('/:id', function(req, res, next) {
 
     var db = req.db;
@@ -197,7 +197,7 @@ router.get('/:id', function(req, res, next) {
     products = db.get('products');
     item_details = '';
 
-    /* Check if the object id is valid */
+    /* Nesne kimliğinin geçerli olup olmadığını kontrol edin */
     if (item_id_check) {
         async.parallel([
             function(callback) {

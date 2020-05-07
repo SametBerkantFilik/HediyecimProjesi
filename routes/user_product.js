@@ -9,7 +9,7 @@ var storage = multer.diskStorage({
     destination: './public/images/uploads/',
     /* upload path */
     filename: function(req, file, cb) {
-        /* Format: random hex using crypto + image extension */
+        /* Biçim: crypto + image uzantısı kullanarak rastgele onaltılı */
         crypto.pseudoRandomBytes(16, function(err, raw) {
             cb(null, raw.toString('hex') + path.extname(file.originalname));
         });
@@ -20,40 +20,42 @@ var upload_image = multer({
     fileFilter: function(req, file, cb) {
         var allowed_extensions = ['.jpg', '.png', '.gif', '.bmp', '.jpeg'];
         var file_extension = path.extname(file.originalname);
-        /* Check if file extension is valid */
+        /* Dosya uzantısının geçerli olup olmadığını kontrol edin */
         if (allowed_extensions.indexOf(file_extension) == -1) {
-            console.log(file.originalname + ' is not a valid file type');
-            /* Do not upload if file is not an image */
+            console.log(file.originalname + ' geçerli bir dosya türü değil');
+            /* Dosya bir resim değilse yükleme */
             return cb(null, false);
         }
         cb(null, true);
     }
 });
 
-/* GET User Products page. */
+/* Kullanıcı ürünleri sayfasını getir. */
 router.get('/', function(req, res, next) {
     if (!req.isAuthenticated()) return res.redirect('/user/login');
 
-    res.render('user/products', { title: 'My Products' });
+    res.render('user/products', {
+        title: 'My Products'
+    });
 });
 
-/* Serve the products. */
+/* Ürünleri sunun. */
 router.post('/view', function(req, res) {
 
-    /* Set our internal DB variable */
+    /* Dahili DB değişkenimizi ayarlayın */
     var db = req.db;
 
-    /* Set our collection */
+    /* Koleksiyonumuzu ayarlayın */
     products = db.get('products');
 
     pag_content = '';
     pag_navigation = '';
 
-    page = parseInt(req.body.data.page); /* Page we are currently at */
-    name = req.body.data.th_name; /* Name of the column name we want to sort */
-    sort = req.body.data.th_sort == 'ASC' ? 1 : -1; /* Order of our sort (DESC or ASC) */
-    max = parseInt(req.body.data.max); /* Number of items to display per page */
-    search = req.body.data.search; /* Keyword provided on our search box */
+    page = parseInt(req.body.data.page); /* Şu anda bulunduğumuz sayfa */
+    name = req.body.data.th_name; /* Sıralamak istediğimiz sütun adının adı */
+    sort = req.body.data.th_sort == 'ASC' ? 1 : -1; /* Sıralamamızın sırası (DESC veya ASC) */
+    max = parseInt(req.body.data.max); /* Sayfa başına görüntülenecek öğe sayısı */
+    search = req.body.data.search; /* Arama kutumuzda verilen anahtar kelime */
 
     cur_page = page;
     page -= 1;
@@ -66,40 +68,47 @@ router.post('/view', function(req, res) {
 
     where_search = {};
 
-    /* Check if there is a string inputted on the search box */
+    /* Arama kutusuna girilmiş bir dize olup olmadığını kontrol edin */
     if (search != '') {
-        /* If a string is inputted, include an additional query logic to our main query to filter the results */
+        /* Bir dize girilirse, sonuçları filtrelemek için ana sorgumuza ek bir sorgu mantığı ekleyin*/
         var filter = new RegExp(search, 'i');
         where_search = {
-            '$or': [
-                { 'name': filter },
-                { 'price': filter },
+            '$or': [{
+                    'name': filter
+                },
+                {
+                    'price': filter
+                },
             ]
         };
     }
 
-    /* Only query for items owned by currently logged in user */
+    /* Yalnızca şu anda oturum açmış kullanıcının sahip olduğu öğeleri sorgula */
     var where_author = {
-        '$and': [
-            { 'author': req.user._id.toString() }
-        ]
+        '$and': [{
+            'author': req.user._id.toString()
+        }]
     };
 
     var where = {};
-    for (var attrname in where_author) { where[attrname] = where_author[attrname]; }
-    for (var attrname in where_search) { where[attrname] = where_search[attrname]; }
+    for (var attrname in where_author) {
+        where[attrname] = where_author[attrname];
+    }
+    for (var attrname in where_search) {
+        where[attrname] = where_search[attrname];
+    }
 
     var all_items = '';
     var count = '';
     var sort_query = {};
 
-    /* We use async task to make sure we only return data when all queries completed successfully */
+    /* async yalnızca tüm sorgular başarıyla tamamlandığında veri döndürdüğümüzden emin olmak için kullanırız */
     async.parallel([
         function(callback) {
-            /* Use name and sort variables as field names */
+            /* Alan adları olarak ad kullanın ve değişkenleri sıralayın */
             sort_query[name] = sort;
 
-            /* Retrieve all the posts */
+            /* Tüm mesajları al */
             products.find(where, {
                 limit: per_page,
                 skip: start,
@@ -121,8 +130,8 @@ router.post('/view', function(req, res) {
                 callback();
             });
         }
-    ], function(err) { //This is the final callback
-        /* Check if our query returns anything. */
+    ], function(err) { //Burası son callback
+        /* Sorgumuzun bir şey döndürüp döndürmediğini kontrol edin. */
         if (count) {
             for (var key in all_items) {
                 pag_content += '<tr>' +
@@ -139,7 +148,7 @@ router.post('/view', function(req, res) {
                     '</tr>';
             }
         } else {
-            pag_content += '<td colspan="7" class="p-d bg-danger">No Products Found</td>';
+            pag_content += '<td colspan="7" class="p-d bg-danger">Ürün Bulunamadı</td>';
         }
 
         pag_content = pag_content + "<br class = 'clear' />";
@@ -167,16 +176,16 @@ router.post('/view', function(req, res) {
         pag_navigation += "<ul>";
 
         if (first_btn && cur_page > 1) {
-            pag_navigation += "<li p='1' class='active'>First</li>";
+            pag_navigation += "<li p='1' class='active'>İlk</li>";
         } else if (first_btn) {
-            pag_navigation += "<li p='1' class='inactive'>First</li>";
+            pag_navigation += "<li p='1' class='inactive'>İlk</li>";
         }
 
         if (previous_btn && cur_page > 1) {
             pre = cur_page - 1;
-            pag_navigation += "<li p='" + pre + "' class='active'>Previous</li>";
+            pag_navigation += "<li p='" + pre + "' class='active'>Önceki</li>";
         } else if (previous_btn) {
-            pag_navigation += "<li class='inactive'>Previous</li>";
+            pag_navigation += "<li class='inactive'>Önceki</li>";
         }
         for (i = start_loop; i <= end_loop; i++) {
 
@@ -188,15 +197,15 @@ router.post('/view', function(req, res) {
 
         if (next_btn && cur_page < no_of_paginations) {
             nex = cur_page + 1;
-            pag_navigation += "<li p='" + nex + "' class='active'>Next</li>";
+            pag_navigation += "<li p='" + nex + "' class='active'>İleri</li>";
         } else if (next_btn) {
-            pag_navigation += "<li class='inactive'>Next</li>";
+            pag_navigation += "<li class='inactive'>İleri</li>";
         }
 
         if (last_btn && cur_page < no_of_paginations) {
-            pag_navigation += "<li p='" + no_of_paginations + "' class='active'>Last</li>";
+            pag_navigation += "<li p='" + no_of_paginations + "' class='active'>Son</li>";
         } else if (last_btn) {
-            pag_navigation += "<li p='" + no_of_paginations + "' class='inactive'>Last</li>";
+            pag_navigation += "<li p='" + no_of_paginations + "' class='inactive'>Son</li>";
         }
 
         pag_navigation = pag_navigation + "</ul>";
@@ -212,21 +221,23 @@ router.post('/view', function(req, res) {
 
 });
 
-/* GET User Products Add page. */
+/* Kullanıcı ürünlerini sayfaya ekle. */
 router.get('/add', function(req, res, next) {
     if (!req.isAuthenticated()) return res.redirect('/user/login');
 
-    res.render('user/products-add', { title: 'Add Product' });
+    res.render('user/products-add', {
+        title: 'Add Product'
+    });
 });
 
-/* Handle POST request to Add Item */
+/* Öğe Eklemek için POST isteğini işleme */
 router.post('/create', function(req, res) {
 
-    /* Set our internal DB variable */
+    /* Dahili DB değişkenimizi ayarlayın */
     var db = req.db;
     products = db.get('products');
 
-    /* Submit to the DB */
+    /* DB'ye gönderir */
     products.insert({
         'name': req.body.name,
         'author': req.user._id.toString(),
@@ -238,24 +249,24 @@ router.post('/create', function(req, res) {
         'date': req.body.date
     }, function(err, doc) {
         if (err) {
-            res.send(0); /* If it failed, return 0 (error) */
+            res.send(0); /* Başarısız olursa, return 0 (error) */
         } else {
-            res.send(doc._id); /* Return document ID if insert was successfull */
+            res.send(doc._id); /* Ekleme başarılı olduysa belge kimliğini döndür */
         }
     });
 });
 
-/* GET User Products Edit page. */
+/* Kullanıcı Ürünlerini Düzenle sayfasını getir. */
 router.get('/edit/:id', function(req, res, next) {
     if (!req.isAuthenticated()) return res.redirect('/user/login');
 
     var db = req.db;
-    item_id = req.params.id
+    item_id = req.params.id;
     item_id_check = item_id.match(/^[0-9a-fA-F]{24}$/);
     products = db.get('products');
     item_details = '';
 
-    /* Check if the object id is valid */
+    /* Nesne kimliğinin geçerli olup olmadığını kontrol edin */
     if (item_id_check) {
         async.parallel([
             function(callback) {
@@ -265,24 +276,24 @@ router.get('/edit/:id', function(req, res, next) {
                 });
             }
         ], function(err) {
-            /* Make sure the current user owns the item */
+            /* Geçerli kullanıcının öğeye sahip olduğundan emin olun */
             if (req.user._id.toString() == item_details.author) {
                 res.render('user/products-edit', {
                     title: 'Edit Product',
                     item: item_details
                 });
             } else {
-                res.status(404).send('You are not allowed to edit that item');
+                res.status(404).send('Bu öğeyi düzenleme izniniz yok');
             }
         });
 
     } else {
-        res.status(404).send('Invalid Item ID');
+        res.status(404).send('Geçersiz Öğe Kimliği');
     }
 });
 
 router.post('/update', upload_image.array('images'), function(req, res, next) {
-    /* Set our internal DB variable */
+    /* Dahili DB değişkenimizi ayarla */
     var db = req.db;
     products = db.get('products');
 
@@ -298,17 +309,17 @@ router.post('/update', upload_image.array('images'), function(req, res, next) {
         }
     }, function(err, doc) {
         if (err) {
-            /* If it failed, return error */
+            /* Başarısız olursa, hata döndür */
             res.send({
                 'status': 0,
-                'message': 'There was a problem updating the information on the database.'
+                'message': 'Veritabanındaki bilgiler güncellenirken bir sorun oluştu.'
             });
         } else {
             if (req.files) {
                 var uploads = req.files;
                 var uploaded_images = [];
 
-                /* Save image(s) to database */
+                /* Görüntüleri veritabanına kaydet */
                 for (var key in uploads) {
                     if (uploads.hasOwnProperty(key)) {
                         products.update(req.body.id, {
@@ -321,7 +332,7 @@ router.post('/update', upload_image.array('images'), function(req, res, next) {
                 }
             }
 
-            /* And forward to success page */
+            /* Ve başarı sayfasına ilerleyin */
             res.send({
                 'status': 1,
                 'images': uploaded_images,
@@ -334,21 +345,21 @@ router.post('/update', upload_image.array('images'), function(req, res, next) {
 
 });
 
-/* Handle POST request to Delete Item */
+/* Öğe Silme POST isteğini işleme */
 router.post('/delete', function(req, res) {
-    /* Set our internal DB variable */
+    /* Dahili DB değişkenimizi ayarlayın */
     var db = req.db;
-    item_id = req.body.item_id
+    item_id = req.body.item_id;
     item_id_check = item_id.match(/^[0-9a-fA-F]{24}$/);
     products = db.get('products');
     item_images = '';
 
-    /* Check if the object id is valid */
+    /* Nesne kimliğinin geçerli olup olmadığını kontrol edin */
     if (item_id_check) {
         async.parallel([
             function(callback) {
                 products.findOne(item_id).then((doc) => {
-                    /* Delete all images of this product if existing */
+                    /* Varsa bu ürünün tüm resimlerini sil */
                     if (doc.hasOwnProperty('images')) {
                         var item_images = doc.images;
                         for (var i = 0; i < item_images.length; i++) {
@@ -362,8 +373,10 @@ router.post('/delete', function(req, res) {
 
             }
         ], function(err) {
-            /* Delete item data from the database */
-            products.remove({ '_id': item_id }, function(err, response) {
+            /* Veritabanından öğe verilerini silme */
+            products.remove({
+                '_id': item_id
+            }, function(err, response) {
                 if (response.result.n == 1) {
                     res.send('1');
                 } else {
@@ -378,9 +391,9 @@ router.post('/delete', function(req, res) {
 
 });
 
-/* Set as featured image */
+/* Öne çıkan resim olarak ayarla */
 router.post('/image/set-featured', function(req, res) {
-    /* Set our internal DB variable */
+    /* Dahili DB değişkenimizi ayarlayın */
     var db = req.db;
     products = db.get('products');
 
@@ -403,13 +416,13 @@ router.post('/image/set-featured', function(req, res) {
     });
 });
 
-/* Delete image */
+/* Resmi Sil */
 router.post('/image/unset', function(req, res) {
 
     fs.unlink(uploads_dir + req.body.image, (err) => {
         if (err) throw err;
 
-        /* Set our internal DB variable */
+        /* Dahili DB değişkenimizi ayarlayın */
         var db = req.db;
         products = db.get('products');
 
